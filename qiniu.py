@@ -7,7 +7,6 @@ import urlparse
 import qiniu
 
 from .randbytes import randbytes2
-import yourapp.config as config
 
 
 class QiniuFS(object):
@@ -15,21 +14,25 @@ class QiniuFS(object):
     Qiniu file storage
 
     Attributes:
-        bucket_name: 存储空间
+        bucket:      存储空间
+        access_key:  access_key
+        secret_key:  secret_key
         prefix_urls: 存储空间URL前缀
         policy:      存储空间上传策略
     '''
-    def __init__(self, bucket_name, prefix_url, policy=None):
-        self.bucket_name = bucket_name
+    def __init__(self, bucket, access_key, secret_key, prefix_url, policy=None):
+        self.bucket = bucket
+        self.access_key = access_key
+        self.secret_key = secret_key
         self.prefix_url = prefix_url
         self.policy = policy
 
     def __repr__(self):
-        return '<QiniuFS %s>' % self.bucket_name
+        return '<QiniuFS %s>' % self.bucket
 
     def _make_auth(self):
-        return qiniu.Auth(config.QINIU_AK.encode('ascii'),
-                          config.QINIU_SK.encode('ascii'))
+        return qiniu.Auth(self.access_key.encode('ascii'),
+                          self.secret_key.encode('ascii'))
 
     def _token(self, key=None, expires=3600):
         """
@@ -37,7 +40,7 @@ class QiniuFS(object):
         """
         key = key or randbytes2(16)
         auth = self._make_auth()
-        token = auth.upload_token(self.bucket_name, key=key, expires=expires, policy=self.policy)
+        token = auth.upload_token(self.bucket, key=key, expires=expires, policy=self.policy)
         return token, key
 
     def upload_data(self, data, mime_type=None, key=None):
@@ -84,7 +87,7 @@ class QiniuFS(object):
         """
         auth = self._make_auth()
         bucket = qiniu.BucketManager(auth)
-        ret, info = bucket.delete(self.bucket_name, key)
+        ret, info = bucket.delete(self.bucket, key)
         return True, ret
 
     def asyn_file_process(self, key, fops, pipeline=None):
@@ -92,7 +95,7 @@ class QiniuFS(object):
         文件异步持久化处理
         """
         auth = self._make_auth()
-        pfop = qiniu.PersistentFop(auth, self.bucket_name, pipeline=pipeline)
+        pfop = qiniu.PersistentFop(auth, self.bucket, pipeline=pipeline)
         ops = []
         ops.append(fops)
         ret, info = pfop.execute(key, ops, force=True)
@@ -106,7 +109,7 @@ class QiniuFS(object):
         if self.prefix_url:
             url = urlparse.urljoin(self.prefix_url, '/' + key.rstrip('/'))
         else:
-            url = ('http://%s.qiniudn.com/' % self.bucket_name) + key
+            url = ('http://%s.qiniudn.com/' % self.bucket) + key
 
         if style:
             url = url + '-' + style
@@ -125,7 +128,7 @@ class QiniuPolicy(object):
     http://developer.qiniu.com/article/developer/security/put-policy.html
     '''
     def __init__(self,
-                 bucket_name,
+                 bucket,
                  callback_url=None,
                  callback_body=None,
                  return_url=None,
@@ -136,7 +139,7 @@ class QiniuPolicy(object):
                  delete_after_days=None):
 
         self.policy = {}
-        self.bucket_name = bucket_name
+        self.bucket = bucket
 
         if callback_url:
             self.policy['callbackUrl'] = callback_url
