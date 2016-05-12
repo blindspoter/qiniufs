@@ -2,22 +2,26 @@
 
 from __future__ import absolute_import
 
+import datetime
+import urlparse
 import qiniu
+
 from .randbytes import randbytes2
 import yourapp.config as config
 
 
 class QiniuFS(object):
     '''
-    七牛云存储
+    Qiniu file storage
+
     Attributes:
         bucket_name: 存储空间
         prefix_urls: 存储空间URL前缀
         policy:      存储空间上传策略
     '''
-    def __init__(self, bucket_name, prefix_urls, policy=None):
+    def __init__(self, bucket_name, prefix_url, policy=None):
         self.bucket_name = bucket_name
-        self.prefix_urls = prefix_urls
+        self.prefix_url = prefix_url
         self.policy = policy
 
     def __repr__(self):
@@ -93,6 +97,26 @@ class QiniuFS(object):
         ops.append(fops)
         ret, info = pfop.execute(key, ops, force=True)
         return True, ret
+
+    def get_url(self, key, scheme='http', style=None, is_private=False):
+        """
+        下载地址
+        """
+        url = ''
+        if self.prefix_url:
+            url = urlparse.urljoin(self.prefix_url, '/' + key.rstrip('/'))
+        else:
+            url = ('http://%s.qiniudn.com/' % self.bucket_name) + key
+
+        if style:
+            url = url + '-' + style
+
+        if is_private:
+            expires = datetime.timedelta(hours=1)
+            expires = int(expires.total_seconds())
+            auth = self._make_auth()
+            url = auth.private_download_url(url, expires=expires)
+        return url
 
 
 class QiniuPolicy(object):
