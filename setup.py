@@ -4,12 +4,12 @@ Install
 
 .. code:: bash
 
-  pip install flask-qiniu
+  pip install qiniufs
 
 Links
 `````
 
-* `website <https://github.com/kevinchendev/flask-qiniu>`_
+* `website <https://github.com/kevinchendev/qiniufs>`_
 
 """
 
