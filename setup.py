@@ -17,13 +17,13 @@ Links
 from setuptools import setup
 
 setup(
-    name='flask-qiniu',
+    name='qiniufs',
     version='0.0.1',
-    url='https://github.com/kevinchendev/flask-qiniu',
+    url='https://github.com/kevinchendev/qiniufs',
     license='MIT',
     author='kevinchen',
     author_email='wqchen.xjtuer@gmail.com',
-    keywords='GitHub flask-qiniu',
+    keywords='qiniu for flask',
     description='qiniu file uploader for flask!',
     long_description=__doc__,
     py_modules=['qiniu'],
@@ -32,7 +32,7 @@ setup(
         'qiniu==7.0.6'
     ],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
