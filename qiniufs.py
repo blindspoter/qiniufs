@@ -14,11 +14,11 @@ class QiniuFS(object):
     Qiniu file storage
 
     Attributes:
-        bucket:      存储空间
+        bucket:      bucket name
         access_key:  access_key
         secret_key:  secret_key
-        prefix_urls: 存储空间URL前缀
-        policy:      存储空间上传策略
+        prefix_url:  domain
+        policy:      policy for upload
     '''
     def __init__(self, bucket, access_key, secret_key, prefix_url, policy=None):
         self.bucket = bucket
@@ -36,7 +36,7 @@ class QiniuFS(object):
 
     def _token(self, key=None, expires=3600):
         """
-        上传凭证
+        token
         """
         key = key or randbytes2(16)
         auth = self._make_auth()
@@ -45,14 +45,14 @@ class QiniuFS(object):
 
     def upload_data(self, data, mime_type=None, key=None):
         """
-        上传二进制流
+        upload data stream
         Args:
-            data:      二进制流对象
-            key:       文件名
-            mime_type: 文件mimeType
+            data:      data stream
+            key:       data stream name
+            mime_type: data stream mimeType
 
         Returns:
-            True or False 和 {"hash": "<Hash string>", "key": "<Key string>"}
+            True or False and {"hash": "<Hash string>", "key": "<Key string>"}
         """
         token, key = self._token(key=key)
         mime_type = mime_type or 'application/octet-stream'
@@ -63,11 +63,11 @@ class QiniuFS(object):
 
     def upload_file(self, file, mime_type=None, key=None):
         """
-        断点续传上传文件
+        upload file object
         Args:
-            file:      文件对象
-            key:       文件名
-            mime_type: 文件mimeType
+            file:      file object
+            key:       file name
+            mime_type: file mimeType
 
         Returns:
             True or False and {"hash": "<Hash string>", "key": "<Key string>"}
@@ -83,7 +83,7 @@ class QiniuFS(object):
 
     def delete_file(self, key):
         """
-        文件删除, 谨慎使用
+        delete the file form qiniu
         """
         auth = self._make_auth()
         bucket = qiniu.BucketManager(auth)
@@ -92,7 +92,7 @@ class QiniuFS(object):
 
     def asyn_file_process(self, key, fops, pipeline=None):
         """
-        文件异步持久化处理
+        asynchronous file persistence
         """
         auth = self._make_auth()
         pfop = qiniu.PersistentFop(auth, self.bucket, pipeline=pipeline)
@@ -103,7 +103,7 @@ class QiniuFS(object):
 
     def get_url(self, key, scheme='http', style=None, is_private=False):
         """
-        下载地址
+        url for the uploaded file
         """
         url = ''
         if self.prefix_url:
@@ -124,7 +124,6 @@ class QiniuFS(object):
 
 class QiniuPolicy(object):
     '''
-    上传策略,字段含义请参考七牛文档
     http://developer.qiniu.com/article/developer/security/put-policy.html
     '''
     def __init__(self,

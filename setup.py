@@ -26,7 +26,7 @@ setup(
     keywords='qiniu for flask',
     description='qiniu file uploader for flask!',
     long_description=__doc__,
-    py_modules=['qiniu'],
+    py_modules=['qiniufs'],
     platforms='any',
     install_requires=[
         'qiniu==7.0.6'
