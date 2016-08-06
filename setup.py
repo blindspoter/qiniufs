@@ -1,24 +1,42 @@
 """
 Install
 ```````
+.. code::bash
 
-.. code:: bash
+pip install qiniufs
 
-  pip install qiniufs
+Usage
+`````
+.. code:: python
+
+  # init
+  bucket_name = "your-qiniu-bucket-name"
+  prefix_url = "your-qiniu-domain"
+  fs = QiniuFS(bucket_name, access_key, secret_key, prefix_url)
+
+  # upload
+  mime = data.mimetype
+  r, d = fs.upload_data(data, mime=mime)
+  if r and d:
+      key = d.get('key')
+      url = fs.get_url(d.get('key'))
+
+  # delete
+  r = fs.delete_file(key)
+  if r:
+      print "success"
 
 Links
 `````
-
-* `website <https://github.com/kevinchendev/qiniufs>`_
+* `github <https://github.com/kevinchendev/qiniufs>`_
 
 """
-
 
 from setuptools import setup
 
 setup(
     name='qiniufs',
-    version='0.0.2',
+    version='1.0.0',
     url='https://github.com/kevinchendev/qiniufs',
     license='MIT',
     author='kevinchen',

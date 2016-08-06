@@ -8,6 +8,17 @@ import qiniu
 
 from .randbytes import randbytes2
 
+POLICY_FILED = [
+    'callbackUrl',
+    'callbackBody',
+    'returnUrl',
+    'returnBody',
+    'persistentOps',
+    'persistentNotifyUrl',
+    'persistentPipeline',
+    'deleteAfterDays',
+]
+
 
 class QiniuFS(object):
     '''
@@ -20,12 +31,12 @@ class QiniuFS(object):
         prefix_url:  domain
         policy:      policy for upload
     '''
-    def __init__(self, bucket, access_key, secret_key, prefix_url, policy=None):
+    def __init__(self, bucket, access_key, secret_key, prefix_url, **kwargs):
         self.bucket = bucket
         self.access_key = access_key
         self.secret_key = secret_key
         self.prefix_url = prefix_url
-        self.policy = policy
+        self.policy = self.get_policy(**kwargs)
 
     def __repr__(self):
         return '<QiniuFS %s>' % self.bucket
@@ -121,41 +132,14 @@ class QiniuFS(object):
             url = auth.private_download_url(url, expires=expires)
         return url
 
-
-class QiniuPolicy(object):
-    '''
-    http://developer.qiniu.com/article/developer/security/put-policy.html
-    '''
-    def __init__(self,
-                 bucket,
-                 callback_url=None,
-                 callback_body=None,
-                 return_url=None,
-                 return_body=None,
-                 persistent_ops=None,
-                 persistent_notify_url=None,
-                 persistent_pipeline=None,
-                 delete_after_days=None):
-
-        self.policy = {}
-        self.bucket = bucket
-
-        if callback_url:
-            self.policy['callbackUrl'] = callback_url
-        if callback_body:
-            self.policy['callbackBody'] = callback_body
-        if return_url:
-            self.policy['returnUrl'] = return_url
-        if return_body:
-            self.policy['returnBody'] = return_body
-        if persistent_ops:
-            self.policy['persistentOps'] = persistent_ops
-        if persistent_notify_url:
-            self.policy['persistentNotifyUrl'] = persistent_notify_url
-        if persistent_pipeline:
-            self.policy['persistentPipeline'] = persistent_pipeline
-        if delete_after_days:
-            self.policy['deleteAfterDays'] = delete_after_days
+    def get_policy(self, **kwargs):
+        '''
+        http://developer.qiniu.com/article/developer/security/put-policy.html
+        '''
+        for key in kwargs:
+            if key not in POLICY_FILED:
+                raise UploadError("input the policy parameters error")
+        return kwargs
 
 
 class UploadError(Exception):
