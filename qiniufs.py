@@ -2,11 +2,11 @@
 
 from __future__ import absolute_import
 
+import os
 import datetime
 import urlparse
 import qiniu
-
-from .randbytes import randbytes2
+import binascii
 
 POLICY_FILED = [
     'callbackUrl',
@@ -49,7 +49,7 @@ class QiniuFS(object):
         """
         token
         """
-        key = key or randbytes2(16)
+        key = key or binascii.hexlify(os.urandom(16))
         auth = self._make_auth()
         token = auth.upload_token(self.bucket, key=key, expires=expires, policy=self.policy)
         return token, key

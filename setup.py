@@ -28,7 +28,7 @@ Usage
 
 Links
 `````
-* `github <https://github.com/kevinchendev/qiniufs>`_
+* `github <https://github.com/blindspoter/qiniufs>`_
 
 """
 
@@ -36,8 +36,8 @@ from setuptools import setup
 
 setup(
     name='qiniufs',
-    version='1.0.0',
-    url='https://github.com/kevinchendev/qiniufs',
+    version='1.0.1',
+    url='https://github.com/blindspoter/qiniufs',
     license='MIT',
     author='kevinchen',
     author_email='wqchen.xjtuer@gmail.com',
@@ -50,7 +50,7 @@ setup(
         'qiniu==7.0.6'
     ],
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 1 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
@@ -58,9 +58,5 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
     ],
 )

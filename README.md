@@ -2,7 +2,7 @@ QINIUFS
 =======
 
 [![Version](https://img.shields.io/pypi/v/qiniufs.svg)](https://pypi.python.org/pypi/qiniufs)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/kevinchendev/qiniufs/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/blindspoter/qiniufs/master/LICENSE)
 
 Qiniu file uploader for Flask
 
