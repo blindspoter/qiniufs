@@ -36,7 +36,7 @@ from setuptools import setup
 
 setup(
     name='qiniufs',
-    version='1.0.1',
+    version='1.0.2',
     url='https://github.com/blindspoter/qiniufs',
     license='MIT',
     author='kevinchen',
@@ -47,16 +47,22 @@ setup(
     py_modules=['qiniufs'],
     platforms='any',
     install_requires=[
-        'qiniu==7.0.6'
+        'qiniu==7.1.7'
     ],
     classifiers=[
-        'Development Status :: 1 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ],
 )

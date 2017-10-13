@@ -21,7 +21,7 @@ POLICY_FILED = [
 
 
 class QiniuFS(object):
-    '''
+    """
     Qiniu file storage
 
     Attributes:
@@ -30,7 +30,7 @@ class QiniuFS(object):
         secret_key:  secret_key
         prefix_url:  domain
         policy:      policy for upload
-    '''
+    """
     def __init__(self, bucket, access_key, secret_key, prefix_url, **kwargs):
         self.bucket = bucket
         self.access_key = access_key
@@ -45,7 +45,7 @@ class QiniuFS(object):
         return qiniu.Auth(self.access_key.encode('ascii'),
                           self.secret_key.encode('ascii'))
 
-    def _token(self, key=None, expires=3600):
+    def token(self, key=None, expires=3600):
         """
         token
         """
@@ -65,12 +65,12 @@ class QiniuFS(object):
         Returns:
             True or False and {"hash": "<Hash string>", "key": "<Key string>"}
         """
-        token, key = self._token(key=key)
+        token, key = self.token(key=key)
         mime_type = mime_type or 'application/octet-stream'
         ret, info = qiniu.put_data(token, key, data, mime_type=mime_type)
         if ret is None:
             raise UploadError(ret, info)
-        return (True, ret)
+        return True, ret
 
     def upload_file(self, file, mime_type=None, key=None):
         """
@@ -83,14 +83,14 @@ class QiniuFS(object):
         Returns:
             True or False and {"hash": "<Hash string>", "key": "<Key string>"}
         """
-        token, key = self._token(key=key)
+        token, key = self.token(key=key)
         mime_type = mime_type or 'application/octet-stream'
         data_size = len(file.read())
         ret, info = qiniu.put_stream(token, key, file, data_size, mime_type=mime_type,
                                      progress_handler=lambda progress, total: progress)
         if ret is None:
             raise UploadError(ret, info)
-        return (True, ret)
+        return True, ret
 
     def delete_file(self, key):
         """
@@ -116,7 +116,6 @@ class QiniuFS(object):
         """
         url for the uploaded file
         """
-        url = ''
         if self.prefix_url:
             url = urlparse.urljoin(self.prefix_url, '/' + key.rstrip('/'))
         else:
@@ -133,9 +132,9 @@ class QiniuFS(object):
         return url
 
     def get_policy(self, **kwargs):
-        '''
-        http://developer.qiniu.com/article/developer/security/put-policy.html
-        '''
+        """
+        http://developer.qiniu.com/article/developer/security/put-policy.html.
+        """
         for key in kwargs:
             if key not in POLICY_FILED:
                 raise UploadError("input the policy parameters error")
